@@ -3,15 +3,10 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/MagnunAVF/tasks-api/db"
+	"github.com/MagnunAVF/tasks-api/models"
 	"github.com/gin-gonic/gin"
 )
-
-type Task struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Done        bool   `json:"done"`
-	Priority    uint8  `json:"priority"`
-}
 
 func GetTasksHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
@@ -29,22 +24,27 @@ func GetTaskHandler(c *gin.Context) {
 }
 
 func CreateTaskHandler(c *gin.Context) {
-	var task Task
+	// check attributes
+	var task models.Task
 	if err := c.BindJSON(&task); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{
-		"route": "create task",
-		"task":  task,
-	})
+	// Create the task
+	if err := db.CreateTask(&task); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	// Task created successfully
+	c.JSON(http.StatusOK, task)
 }
 
 func UpdateTaskHandler(c *gin.Context) {
 	id := c.Param("id")
 
-	var task Task
+	var task models.Task
 	if err := c.ShouldBindJSON(&task); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
