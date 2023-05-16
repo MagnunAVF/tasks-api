@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/MagnunAVF/tasks-api/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -18,7 +19,7 @@ func InitDB() error {
 	}
 
 	// Migrate DB
-	if err := DB.AutoMigrate(&Task{}); err != nil {
+	if err := DB.AutoMigrate(&models.Task{}); err != nil {
 		return err
 	}
 
