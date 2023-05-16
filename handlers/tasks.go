@@ -37,25 +37,27 @@ func GetTaskHandler(c *gin.Context) {
 }
 
 func CreateTaskHandler(c *gin.Context) {
-	// check attributes
 	var task models.Task
 	if err := c.BindJSON(&task); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Create the task
 	if err := db.CreateTask(&task); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
 
-	// Task created successfully
 	c.JSON(http.StatusOK, task)
 }
 
 func UpdateTaskHandler(c *gin.Context) {
-	id := c.Param("id")
+	taskUUIDStr := c.Param("id")
+	taskUUID, err := uuid.Parse(taskUUIDStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid task UUID"})
+		return
+	}
 
 	var task models.Task
 	if err := c.ShouldBindJSON(&task); err != nil {
@@ -63,11 +65,13 @@ func UpdateTaskHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"route": "create task",
-		"task":  task,
-		"id":    id,
-	})
+	updatedTask, err := db.UpdateTaskById(taskUUID, &task)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	c.JSON(http.StatusOK, updatedTask)
 }
 
 func DeleteTaskHandler(c *gin.Context) {
