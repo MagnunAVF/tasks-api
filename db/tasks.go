@@ -24,3 +24,12 @@ func GetAllTasks() ([]models.Task, error) {
 
 	return tasks, nil
 }
+
+func GetTaskByID(id uuid.UUID) (*models.Task, error) {
+	var task models.Task
+	if err := DB.First(&task, "id = ?", id.String()).Error; err != nil {
+		return nil, err
+	}
+
+	return &task, nil
+}

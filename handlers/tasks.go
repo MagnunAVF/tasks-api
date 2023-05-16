@@ -6,6 +6,7 @@ import (
 	"github.com/MagnunAVF/tasks-api/db"
 	"github.com/MagnunAVF/tasks-api/models"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func GetTasksHandler(c *gin.Context) {
@@ -15,18 +16,24 @@ func GetTasksHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"tasks": tasks,
-	})
+	c.JSON(http.StatusOK, tasks)
 }
 
 func GetTaskHandler(c *gin.Context) {
-	id := c.Param("id")
+	taskUUIDStr := c.Param("id")
+	taskUUID, err := uuid.Parse(taskUUIDStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid task UUID"})
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"route": "get task",
-		"id":    id,
-	})
+	task, err := db.GetTaskByID(taskUUID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	c.JSON(http.StatusOK, task)
 }
 
 func CreateTaskHandler(c *gin.Context) {
