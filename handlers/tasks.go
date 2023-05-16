@@ -9,8 +9,14 @@ import (
 )
 
 func GetTasksHandler(c *gin.Context) {
+	tasks, err := db.GetAllTasks()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"route": "get tasks",
+		"tasks": tasks,
 	})
 }
 
