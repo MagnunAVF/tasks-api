@@ -1,8 +1,13 @@
 package db
 
-import "github.com/MagnunAVF/tasks-api/models"
+import (
+	"github.com/MagnunAVF/tasks-api/models"
+	"github.com/google/uuid"
+)
 
 func CreateTask(task *models.Task) error {
+	// Generate UUID
+	task.ID = uuid.New()
 	result := DB.Create(&task)
 	if result.Error != nil {
 		return result.Error
