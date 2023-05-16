@@ -33,3 +33,11 @@ func GetTaskByID(id uuid.UUID) (*models.Task, error) {
 
 	return &task, nil
 }
+
+func DeleteTaskByID(id uuid.UUID) error {
+	if err := DB.Delete(&models.Task{}, "id = ?", id.String()).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

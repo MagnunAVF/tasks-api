@@ -71,10 +71,18 @@ func UpdateTaskHandler(c *gin.Context) {
 }
 
 func DeleteTaskHandler(c *gin.Context) {
-	id := c.Param("id")
+	taskUUIDStr := c.Param("id")
+	taskUUID, err := uuid.Parse(taskUUIDStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid task UUID"})
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"route": "delete task",
-		"id":    id,
-	})
+	err = db.DeleteTaskByID(taskUUID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Task deleted successfully"})
 }
