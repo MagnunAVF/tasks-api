@@ -1,11 +1,19 @@
 package main
 
 import (
+	"log"
+
+	"github.com/MagnunAVF/tasks-api/db"
 	"github.com/MagnunAVF/tasks-api/handlers"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	// Initialize the database connection
+	if err := db.InitDB(); err != nil {
+		log.Fatal(err)
+	}
+
 	router := gin.Default()
 
 	router.GET("/", handlers.HealthHandler)
