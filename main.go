@@ -6,9 +6,15 @@ import (
 	"github.com/MagnunAVF/tasks-api/db"
 	"github.com/MagnunAVF/tasks-api/handlers"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	// Initialize the database connection
 	if err := db.InitDB(); err != nil {
 		log.Fatal(err)
