@@ -15,7 +15,6 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	// Initialize the database connection
 	if err := db.InitDB(); err != nil {
 		log.Fatal(err)
 	}
