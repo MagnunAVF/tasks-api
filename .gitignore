@@ -22,5 +22,6 @@ go.work
 
 .env*
 !.env.sample
+!.env.db.sample
 
 tasks-api
