@@ -29,6 +29,11 @@ func GetTaskHandler(c *gin.Context) {
 
 	task, err := db.GetTaskByID(taskUUID)
 	if err != nil {
+		if err.Error() == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Task not found"})
+			return
+		}
+
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
@@ -67,6 +72,11 @@ func UpdateTaskHandler(c *gin.Context) {
 
 	updatedTask, err := db.UpdateTaskById(taskUUID, &task)
 	if err != nil {
+		if err.Error() == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Task not found"})
+			return
+		}
+
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
