@@ -26,3 +26,20 @@ Change .env vars and run:
 ```
 go build
 ```
+
+## Using docker
+### Building
+```
+docker build -t tasks-api .
+```
+
+### Running
+```
+docker run --env-file .env -p 8080:8080 tasks-api
+```
+
+## Using docker compose
+### Building and running locally
+```
+docker compose up --build
+```
