@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "78da1383-e4c4-4958-a5c5-db3a2475202e",
-		"name": "Tasks API",
+		"_postman_id": "6262adef-67cd-4af8-806a-65bd02841edf",
+		"name": "Tasks API Golang",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "1451659"
 	},
